@@ -1,0 +1,240 @@
+﻿<Window x:Class="BMC2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BMC2"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        mc:Ignorable="d"
+        x:Name="Window"
+        Title="BMC2" Height="700" Width="530" Background="{x:Static local:ThemeColor.BackGround}" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True">
+    <Window.Resources>
+    </Window.Resources>
+    <Window.DataContext>
+        <local:ThemeColor/>
+    </Window.DataContext>
+    <Grid>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <!--Row 0 TitleBar-->
+        <Grid MouseLeftButtonDown="Grid_MouseLeftButtonDown" Background="Black">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="80"/>
+            </Grid.ColumnDefinitions>
+            <!--Column 0 BMC -->
+            <Label Content="BMC" Foreground="Gray" FontFamily="Meiryo" FontWeight="Bold" FontSize="14"/>
+            
+            <!--Column 1 TitleText-->
+            <Label Grid.Column="1" Content="Bird May Cry - A Twitter Client by C#" Foreground="Gray" FontFamily="Meiryo" FontSize="12"/>
+            
+            <!--Column 2 Minimum&Close button-->
+            <UniformGrid Rows="1" Grid.Column="2">
+                <Button Content="-" Style="{StaticResource ButtonDedaultStyle}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <ei:ChangePropertyAction TargetName="Window" PropertyName="WindowState" Value="Minimized"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button Content="X" Style="{StaticResource ButtonDedaultStyle}" Click="CloseButton_Click"/>
+            </UniformGrid>
+        </Grid>
+
+        <!--Row 1 Tweet Grid-->
+        <Border Grid.Row="1" BorderThickness="0,0,0,1" BorderBrush="{x:Static local:ThemeColor.MouseOver}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
+                <!--Column 0 VeidyUserIcon -->
+                <Ellipse Height="30" Width="30" HorizontalAlignment="Right" Margin="0,0,10,0">
+                    <Ellipse.Fill>
+                        <ImageBrush x:Name="UserIcon"/>
+                    </Ellipse.Fill>
+                </Ellipse>
+
+                <!--Column 1 TweetTextField -->
+                <TextBox x:Name="TweetField" AcceptsReturn="True" Grid.Column="1" Padding="1" TextWrapping="Wrap"  Foreground="{x:Static local:ThemeColor.TextColor}" BorderBrush="{x:Null}" BorderThickness="0" Background="#FF363636" Height="40" Margin="0,0,5,0">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type TextBox}">
+                                        <Border BorderBrush="AliceBlue" Background="{TemplateBinding Background}" BorderThickness="1" CornerRadius="5">
+                                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+
+                <!--Column 2 TweetUpdateButton -->
+                <Button  Margin="3" Grid.Column="2" Click="Button_Click">
+                    <Button.Resources>
+                        <Style TargetType="Button" BasedOn="{StaticResource ButtonDedaultStyle}">
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border" CornerRadius="5" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="true">
+                                                <Setter Property="BorderBrush" Value="{x:Static local:ThemeColor.MouseOver}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Resources>
+                    <Image>
+                        <Image.Style>
+                            <Style TargetType="{x:Type Image}">
+                                <Setter Property="Source" Value="Icons/RedBlackWing.png"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="true">
+                                        <Setter Property="Source" Value="Icons/RedBlackWing_Mouseover.png"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                </Button>
+            </Grid>
+        </Border>
+        <!--Row 2 TimeLineList -->
+        <ScrollViewer Grid.Row="2" ScrollChanged="ScrollChanged">
+            <ListBox ItemsSource="{Binding}" x:Name="TimeLine" Background="{x:Null}" VerticalContentAlignment="Bottom" VerticalAlignment="Top" BorderThickness="0">
+                <ListBox.Template>
+                    <ControlTemplate>
+                        <ItemsPresenter/>
+                    </ControlTemplate>
+                </ListBox.Template>
+
+                <ListBox.Resources>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{x:Static local:ThemeColor.MouseOver}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.Resources>
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="{x:Static local:ThemeColor.MouseOver}" BorderThickness="0,0,0,1" Padding="0,0,0,5" >
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <!--Row 0 RetweetUserName -->
+                                <TextBlock Foreground="{x:Static local:ThemeColor.RetweeterColor}" Margin="55,0,0,0" Text="{Binding RetweetUserName,StringFormat={}{0} Retweeted}" Visibility="{Binding Visibility}"/>
+
+                                <!--Row 1 TweetInfo -->
+                                <Grid Grid.Row="1" MinHeight="40" MaxWidth="480" Margin="3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!--Column 0 TweetUserIcon -->
+                                    <Ellipse Height="40" Width="40" >
+                                        <Ellipse.Fill>
+                                            <ImageBrush ImageSource="{Binding Icon}"/>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+
+                                    <!--Column 1 TweetInfo Vertical_StackPanel-->
+                                    <StackPanel Grid.Column="1" Orientation="Vertical">
+                                        <Grid HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <!--Column 0 UserName-->
+                                            <TextBlock Text="{Binding Name}" FontSize="12" Foreground="{x:Static local:ThemeColor.NameColor}" FontWeight="Bold" FontFamily="Meiryo"/>
+
+                                            <!--Column 0 TwitterID-->
+                                            <TextBlock Grid.Column="1" FontSize="12" Text="{Binding TwitterID}" Foreground="{x:Static local:ThemeColor.IDColor}" Padding="3,0,0,0" FontFamily="Meiryo"  />
+                                        </Grid>
+                                        <TextBlock Text="{Binding Text}" TextWrapping="Wrap" FontSize="12" Foreground="{x:Static local:ThemeColor.TextColor}" HorizontalAlignment="Left" VerticalAlignment="Top" MaxWidth="400" FontFamily="Meiryo"/>
+                                        
+                                        <StackPanel Margin="0,3,0,0" Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Left">
+                                            <StackPanel.Resources>
+                                                <Style TargetType="{x:Type Image}" x:Key="BaseIconStyle">
+                                                    <Setter Property="Margin" Value="20,0,0,0"/>
+                                                    <Setter Property="Cursor" Value="Hand"/>
+                                                    <EventSetter Event="MouseLeftButtonUp" Handler="Image_MouseLeftButtonUp"/>
+                                                </Style>
+                                            </StackPanel.Resources>
+
+                                            <!--ReplyIcon-->
+                                            <Image x:Name="Reply" Source="Icons/tweetsicon/reply.png" Cursor="Hand" MouseLeftButtonUp="Image_MouseLeftButtonUp"/>
+                                            
+                                            <!--RetweetIcon-->
+                                            <Image x:Name="Retweet">
+                                                <Image.Style>
+                                                    <Style TargetType="{x:Type Image}" BasedOn="{StaticResource BaseIconStyle}">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsRetweet}" Value="true">
+                                                                <Setter Property="Source" Value="Icons/tweetsicon/retweeted.png"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding IsRetweet}" Value="false">
+                                                                <Setter Property="Source" Value="Icons/tweetsicon/retweet.png"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
+
+                                            <!--FaviriteIcon-->
+                                            <Image x:Name="Favorite">
+                                                <Image.Style>
+                                                    <Style TargetType="{x:Type Image}" BasedOn="{StaticResource BaseIconStyle}">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsLiked}" Value="true">
+                                                                <Setter Property="Source" Value="Icons/tweetsicon/liked.png"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding IsLiked}" Value="false">
+                                                                <Setter Property="Source" Value="Icons/tweetsicon/like.png"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ScrollViewer>
+    </Grid>
+</Window>
