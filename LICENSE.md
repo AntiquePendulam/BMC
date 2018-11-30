@@ -1,7 +1,8 @@
 
 The MIT License (MIT)
 
-Copyright (c) 2018 
+Bird May Cry - A Twitter Client by C#
+Copyright (c) 2018 AntiqueR
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
